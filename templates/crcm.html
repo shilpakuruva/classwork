@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPREC Kurnool - Course Record Management</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================================
+   NOTIFICATION SYSTEM
+   ================================ */
+
+.notification-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+
+/* Bell */
+
+.notification-btn {
+    position: relative;
+
+    width: 46px;
+    height: 46px;
+
+    border: none;
+    border-radius: 15px;
+
+    background: rgba(255, 255, 255, 0.75);
+
+    box-shadow:
+        0 8px 25px rgba(80, 100, 180, 0.12);
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.notification-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 30px rgba(80, 100, 180, 0.18);
+}
+
+
+/* Red notification number */
+
+.notification-badge {
+    position: absolute;
+
+    top: -5px;
+    right: -5px;
+
+    min-width: 20px;
+    height: 20px;
+
+    padding: 0 5px;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #ff5c7a;
+
+    color: white;
+
+    border-radius: 50px;
+
+    border: 2px solid white;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    box-shadow:
+        0 4px 12px rgba(255, 92, 122, 0.35);
+}
+
+
+/* Notification popup */
+
+.notification-panel {
+    position: absolute;
+
+    top: calc(100% + 14px);
+    right: 0;
+
+    width: 350px;
+    max-width: calc(100vw - 30px);
+
+    background: rgba(255, 255, 255, 0.96);
+
+    border: 1px solid rgba(150, 170, 220, 0.18);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 25px 60px rgba(70, 90, 150, 0.18);
+
+    overflow: hidden;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform:
+        translateY(-8px)
+        scale(0.98);
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+
+    z-index: 9999;
+}
+
+
+.notification-panel.show {
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* Header */
+
+.notification-header {
+    padding: 17px 20px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    color: #26345d;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(238, 243, 255, 0.95),
+            rgba(250, 245, 255, 0.95)
+        );
+
+    border-bottom:
+        1px solid rgba(100, 120, 180, 0.10);
+}
+
+
+/* Notification */
+
+.notification-item {
+
+    display: flex;
+
+    padding: 16px 18px;
+
+    cursor: pointer;
+
+    border-bottom:
+        1px solid rgba(100, 120, 180, 0.08);
+
+    transition:
+        background 0.2s ease;
+}
+
+
+.notification-item:hover {
+    background: #f5f7ff;
+}
+
+
+/* Unread notification */
+
+.notification-item.unread {
+    background:
+        linear-gradient(
+            90deg,
+            #f2f5ff,
+            #ffffff
+        );
+}
+
+
+.notification-item.unread::before {
+    content: "";
+
+    width: 4px;
+
+    border-radius: 10px;
+
+    background: #7185ff;
+
+    margin-right: 12px;
+}
+
+
+/* Content */
+
+.notification-content {
+    flex: 1;
+}
+
+
+.notification-title {
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #26345d;
+
+    margin-bottom: 4px;
+}
+
+
+.notification-message {
+    font-size: 13px;
+
+    line-height: 1.45;
+
+    color: #68738f;
+}
+
+
+.notification-time {
+    margin-top: 7px;
+
+    font-size: 11px;
+
+    color: #a0a8ba;
+}
+
+
+/* Empty */
+
+.notification-empty {
+
+    padding: 35px 20px;
+
+    text-align: center;
+
+    color: #8992a8;
+
+    font-size: 13px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 576px) {
+
+    .notification-panel {
+
+        position: fixed;
+
+        top: 75px;
+        left: 15px;
+        right: 15px;
+
+        width: auto;
+        max-width: none;
+
+        border-radius: 20px;
+    }
+
+    .notification-btn {
+
+        width: 42px;
+        height: 42px;
+
+        border-radius: 13px;
+
+    }
+
+}
+        /* ===== MOBILE RESPONSIVE ONLY ===== */
+
+@media (max-width: 768px) {
+
+    /* Page spacing */
+    .container,
+    .portal-wrapper {
+        width: 94%;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    /* Navbar */
+    .navbar {
+        padding: 12px !important;
+    }
+
+    .navbar .container-fluid {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .brand-title {
+        font-size: 1rem;
+    }
+
+    .brand-tagline {
+        font-size: 0.75rem;
+    }
+
+    /* Cards */
+    .portal-card,
+    .session-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Grids become single column */
+    .row > [class*="col-"] {
+        width: 100%;
+    }
+
+    /* Headings */
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    /* Inputs and textareas */
+    input,
+    select,
+    textarea,
+    .form-control {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        min-height: 130px;
+    }
+
+    /* Buttons */
+    .btn {
+        min-height: 44px;
+    }
+
+    /* Button groups */
+    .action-buttons,
+    .session-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .action-buttons .btn,
+    .session-actions .btn {
+        width: 100%;
+    }
+
+    /* File attachment boxes */
+    .existing-file-box {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    /* Prevent horizontal overflow */
+    img,
+    video,
+    iframe {
+        max-width: 100%;
+    }
+}
+
+
+/* ===== SMALL PHONES ===== */
+
+@media (max-width: 480px) {
+
+    .container,
+    .portal-wrapper {
+        width: 92%;
+    }
+
+    .portal-card {
+        padding: 16px !important;
+    }
+
+    .navbar {
+        padding: 10px !important;
+    }
+
+    .brand-title {
+        font-size: 0.95rem;
+    }
+
+    .brand-tagline {
+        font-size: 0.7rem;
+    }
+
+    .btn-logout {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    textarea {
+        min-height: 120px;
+    }
+}
+        /* ==========================================
+           1. GLOBAL DESIGN SYSTEM (SHARED CORE)
+           ========================================== */
+        :root {
+            /* Brand & Pastel Accents */
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --primary-light: #EEF2FF;
+            --accent-violet: #7C3AED;
+            --accent-sky: #0284C7;
+            --emerald-green: #059669;
+
+            /* Light Dreamy Canvas Base */
+            --bg-gradient-start: #F4F7FF;
+            --bg-gradient-mid: #FAF5FF;
+            --bg-gradient-end: #F0F9FF;
+
+            /* Glassmorphism & Translucent Surfaces */
+            --surface-glass: rgba(255, 255, 255, 0.86);
+            --surface-glass-border: rgba(255, 255, 255, 0.95);
+            --surface-card: rgba(255, 255, 255, 0.92);
+            --surface-inner: rgba(248, 250, 252, 0.85);
+            --surface-inner-border: #E2E8F0;
+
+            /* Elevation & Soft Shadows */
+            --card-shadow: 0 16px 40px -12px rgba(99, 102, 241, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            --card-hover-shadow: 0 24px 50px -10px rgba(79, 70, 229, 0.2), 0 8px 20px -4px rgba(0, 0, 0, 0.05);
+
+            /* Typography Scale & Palette */
+            --text-main: #0F172A;
+            --text-heading: #1E1B4B;
+            --text-muted: #64748B;
+            --text-inverse: #FFFFFF;
+
+            /* Radii & Transitions */
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-main);
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        /* Ambient Dreamy Background Glows */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(110px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.65;
+        }
+        .glow-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(196, 181, 253, 0.4) 0%, rgba(224, 231, 255, 0.1) 100%);
+            top: -150px;
+            left: -150px;
+        }
+        .glow-2 {
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(186, 230, 253, 0.45) 0%, rgba(216, 180, 254, 0.1) 100%);
+            bottom: -200px;
+            right: -150px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ==========================================
+           2. LIGHT GLASS NAVBAR STYLES
+           ========================================== */
+        .navbar-wrapper {
+            position: sticky;
+            top: 16px;
+            z-index: 100;
+            margin-bottom: 36px;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--surface-glass-border);
+            border-radius: var(--radius-lg);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .nav-brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-violet) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-inverse);
+            font-weight: 800;
+            font-size: 1.15rem;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        .nav-brand-text h2 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            line-height: 1.1;
+        }
+
+        .nav-brand-text span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #DC2626;
+            padding: 9px 20px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-logout:hover {
+            background: #DC2626;
+            color: #FFFFFF;
+            border-color: #DC2626;
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .btn-logout svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-logout:hover svg {
+            transform: translateX(3px);
+        }
+
+        /* ==========================================
+           3. ACADEMIC WORKSPACE HERO HEADER
+           ========================================== */
+        .workspace-hero {
+            margin-bottom: 36px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            padding: 5px 14px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .hero-badge-dot {
+            width: 7px;
+            height: 7px;
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+
+        .workspace-hero h1 {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        .workspace-hero p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .term-pill {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--surface-glass-border);
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ==========================================
+           4. RESPONSIVE GRID & CARDS
+           ========================================== */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .subject-form-wrapper {
+            width: 100%;
+        }
+
+        .subject-card {
+            width: 100%;
+            background: var(--surface-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--surface-glass-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 175px;
+            text-align: left;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--card-shadow);
+            outline: none;
+            text-decoration: none;
+        }
+
+        /* Accent Gradient Line on Top */
+        .subject-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--card-theme-start, var(--primary)), var(--card-theme-end, var(--accent-violet)));
+            opacity: 0.85;
+            transition: var(--transition);
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+            border-color: rgba(199, 210, 254, 0.8);
+        }
+
+        .subject-card:hover::before {
+            height: 6px;
+            opacity: 1;
+        }
+
+        .subject-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .subject-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            background: var(--card-icon-bg, var(--primary-light));
+            color: var(--card-icon-color, var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .subject-card:hover .subject-icon-box {
+            transform: scale(1.08);
+        }
+
+        .subject-type-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: var(--surface-inner);
+            color: var(--text-muted);
+            border: 1px solid var(--surface-inner-border);
+        }
+
+        .subject-card-body {
+            flex-grow: 1;
+            margin-bottom: 16px;
+        }
+
+        .subject-code {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .subject-subtitle {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .subject-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid rgba(226, 232, 240, 0.7);
+        }
+
+        .action-text {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .subject-arrow {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .subject-card:hover .action-text {
+            color: var(--primary-hover);
+        }
+
+        .subject-card:hover .subject-arrow {
+            background: var(--primary);
+            color: var(--text-inverse);
+            transform: translateX(4px);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        /* ==========================================
+           5. PASTEL CARD THEME VARIANTS
+           ========================================== */
+        .card-theme-1 {
+            --card-theme-start: #4F46E5;
+            --card-theme-end: #8B5CF6;
+            --card-icon-bg: #EEF2FF;
+            --card-icon-color: #4F46E5;
+        }
+        .card-theme-2 {
+            --card-theme-start: #0284C7;
+            --card-theme-end: #06B6D4;
+            --card-icon-bg: #F0F9FF;
+            --card-icon-color: #0284C7;
+        }
+        .card-theme-3 {
+            --card-theme-start: #059669;
+            --card-theme-end: #10B981;
+            --card-icon-bg: #ECFDF5;
+            --card-icon-color: #059669;
+        }
+        .card-theme-4 {
+            --card-theme-start: #7C3AED;
+            --card-theme-end: #EC4899;
+            --card-icon-bg: #F5F3FF;
+            --card-icon-color: #7C3AED;
+        }
+        .card-theme-5 {
+            --card-theme-start: #D97706;
+            --card-theme-end: #F59E0B;
+            --card-icon-bg: #FFFBEB;
+            --card-icon-color: #D97706;
+        }
+        .card-theme-6 {
+            --card-theme-start: #0D9488;
+            --card-theme-end: #2DD4BF;
+            --card-icon-bg: #F0FDFA;
+            --card-icon-color: #0D9488;
+        }
+        .card-theme-7 {
+            --card-theme-start: #2563EB;
+            --card-theme-end: #60A5FA;
+            --card-icon-bg: #EFF6FF;
+            --card-icon-color: #2563EB;
+        }
+        .card-theme-8 {
+            --card-theme-start: #9333EA;
+            --card-theme-end: #C084FC;
+            --card-icon-bg: #FAF5FF;
+            --card-icon-color: #9333EA;
+        }
+        .card-theme-9 {
+            --card-theme-start: #15803D;
+            --card-theme-end: #4ADE80;
+            --card-icon-bg: #F0FDF4;
+            --card-icon-color: #15803D;
+        }
+        .card-theme-10 {
+            --card-theme-start: #3730A3;
+            --card-theme-end: #6366F1;
+            --card-icon-bg: #EEF2FF;
+            --card-icon-color: #3730A3;
+        }
+
+        /* ==========================================
+           6. RESPONSIVE LAYOUT
+           ========================================== */
+        @media (max-width: 1024px) {
+            .subjects-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 18px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .subjects-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .workspace-hero {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .workspace-hero h1 {
+                font-size: 1.65rem;
+            }
+
+            .navbar {
+                padding: 10px 16px;
+            }
+
+            .nav-brand-text h2 {
+                font-size: 0.92rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Soft Dreamy Ambient Background Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <div class="main-container">
+
+        <!-- Light Glass Navbar -->
+        <div class="navbar-wrapper">
+            <nav class="navbar">
+                <div class="notification-wrapper">
+
+    <button type="button"
+            class="notification-bell"
+            onclick="openNotifications()">
+
+        🔔
+
+        <span id="notificationBadge" class="notification-badge">
+            0
+        </span>
+
+    </button>
+
+</div>
+
+
+        <div class="notification-header">
+            <span>Notifications</span>
+        </div>
+
+        <div id="notificationList">
+
+            <div class="notification-empty">
+                No notifications
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+                <div class="nav-brand">
+                    <div class="nav-brand-logo">G</div>
+                    <div class="nav-brand-text">
+                        <h2>GPREC Kurnool</h2>
+                        <span>Academic Workspace</span>
+                    </div>
+                </div>
+
+                <!-- Preserved Logout Route -->
+                <a href="{{ url_for('logout') }}" class="btn-logout">
+                    <span>Logout</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Academic Workspace Hero -->
+        <div class="workspace-hero">
+            <div>
+                <div class="hero-badge">
+                    <span class="hero-badge-dot"></span>
+                    <span>Course Records</span>
+                </div>
+                <h1>Course Record Management</h1>
+                <p>Choose a course to view Homework, topics, or update records.</p>
+            </div>
+
+            <div class="term-pill">
+                <span>📚 10 Courses Enrolled</span>
+            </div>
+        </div>
+
+        <!-- Subjects Grid (Flask Forms & Jinja Variables Strictly Preserved) -->
+        <div class="subjects-grid">
+
+            <!-- 1. ATCD -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="1">
+                    <button type="submit" class="subject-card card-theme-1">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                            </div>
+                            <span class="subject-type-badge">Course</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[0][0] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 2. OOAD -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="2">
+                    <button type="submit" class="subject-card card-theme-2">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            </div>
+                            <span class="subject-type-badge">Course</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[1][0] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 3. ITQA -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="3">
+                    <button type="submit" class="subject-card card-theme-3">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                            </div>
+                            <span class="subject-type-badge">Course</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[2][0] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 4. IAI -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="4">
+                    <button type="submit" class="subject-card card-theme-4">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            </div>
+                            <span class="subject-type-badge">Course</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[3][0] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 5. CN -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="5">
+                    <button type="submit" class="subject-card card-theme-5">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            </div>
+                            <span class="subject-type-badge">Course</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[4][0] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 6. FSD-1 Lab -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="6">
+                    <button type="submit" class="subject-card card-theme-6">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                            </div>
+                            <span class="subject-type-badge">Laboratory</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[5][0] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 7. FSD-1 Class -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="7">
+                    <button type="submit" class="subject-card card-theme-7">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31M14 2v7.31M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0"></path></svg>
+                            </div>
+                            <span class="subject-type-badge">Course</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[6][0] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 8. CN Lab -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="8">
+                    <button type="submit" class="subject-card card-theme-8">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            </div>
+                            <span class="subject-type-badge">Laboratory</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[7][0] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 9. IAI Lab -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="9">
+                    <button type="submit" class="subject-card card-theme-9">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                            </div>
+                            <span class="subject-type-badge">Laboratory</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[8][0] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 10. ITTPW -->
+            <div class="subject-form-wrapper">
+                <form action="/subject" method="post">
+                    <input type="hidden" name="subject_id" value="10">
+                    <button type="submit" class="subject-card card-theme-10">
+                        <div class="subject-card-header">
+                            <div class="subject-icon-box">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>
+                            </div>
+                            <span class="subject-type-badge">Course</span>
+                        </div>
+                        <div class="subject-card-body">
+                            <span class="subject-code">{{ subjects[9][0 ] }}</span>
+                            <span class="subject-subtitle">View Academic Record</span>
+                        </div>
+                        <div class="subject-card-footer">
+                            <span class="action-text">Open Workspace</span>
+                            <div class="subject-arrow">➔</div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+<script>
+
+function loadNotificationCount() {
+
+    fetch("/notifications/count")
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        const badge =
+            document.getElementById("notificationBadge");
+
+        if (!badge)
+            return;
+
+        if (data.count > 0) {
+
+            badge.textContent = data.count;
+            badge.style.display = "flex";
+
+        } else {
+
+            badge.style.display = "none";
+
+        }
+
+    })
+
+    .catch(error => {
+        console.log("Notification count error:", error);
+    });
+}
+
+
+function loadNotifications() {
+
+    fetch("/notifications")
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        const list =
+            document.getElementById("notificationList");
+
+        if (!list)
+            return;
+
+        list.innerHTML = "";
+
+        if (!data.notifications ||
+            data.notifications.length === 0) {
+
+            list.innerHTML = `
+                <div class="notification-empty">
+                    No notifications
+                </div>
+            `;
+
+            return;
+        }
+
+
+        data.notifications.forEach(notification => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "notification-item " +
+                (notification.is_read ? "" : "unread");
+
+
+            item.innerHTML = `
+
+                <div class="notification-content">
+
+                    <div class="notification-title">
+                        ${notification.title}
+                    </div>
+
+                    <div class="notification-message">
+                        ${notification.message}
+                    </div>
+
+                    <div class="notification-time">
+                        ${notification.created_at}
+                    </div>
+
+                </div>
+
+            `;
+
+
+            item.onclick = function() {
+
+                openNotification(notification);
+
+            };
+
+
+            list.appendChild(item);
+
+        });
+
+    })
+
+    .catch(error => {
+
+        console.log(
+            "Notification loading error:",
+            error
+        );
+
+    });
+}
+
+
+function toggleNotifications() {
+
+    const panel =
+        document.getElementById("notificationPanel");
+
+    if (!panel)
+        return;
+
+    panel.classList.toggle("show");
+
+    if (panel.classList.contains("show")) {
+
+        loadNotifications();
+
+    }
+
+}
+
+
+function openNotification(notification) {
+
+    fetch("/notifications/read/" + notification.id, {
+        method: "POST"
+    })
+    .then(() => {
+
+        loadNotificationCount();
+
+        // Store the subject that belongs to this notification
+        sessionStorage.setItem(
+            "notification_subject",
+            notification.subject_id
+        );
+
+        // Open that subject
+        window.location.href =
+            "/subject?subject_id=" + notification.subject_id;
+    })
+    .catch(error => {
+        console.log("Notification open error:", error);
+    });
+
+}
+</script>
+</body>
+</html>

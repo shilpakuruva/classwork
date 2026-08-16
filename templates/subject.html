@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ subject_name }} Sessions | Course Record Management</title>
+
+    <!-- Google Fonts & Bootstrap 5 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* ===== MOBILE RESPONSIVE ONLY ===== */
+
+@media (max-width: 768px) {
+
+    /* Page spacing */
+    .container,
+    .portal-wrapper {
+        width: 94%;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    /* Navbar */
+    .navbar {
+        padding: 12px !important;
+    }
+
+    .navbar .container-fluid {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .brand-title {
+        font-size: 1rem;
+    }
+
+    .brand-tagline {
+        font-size: 0.75rem;
+    }
+
+    /* Cards */
+    .portal-card,
+    .session-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Grids become single column */
+    .row > [class*="col-"] {
+        width: 100%;
+    }
+
+    /* Headings */
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    /* Inputs and textareas */
+    input,
+    select,
+    textarea,
+    .form-control {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        min-height: 130px;
+    }
+
+    /* Buttons */
+    .btn {
+        min-height: 44px;
+    }
+
+    /* Button groups */
+    .action-buttons,
+    .session-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .action-buttons .btn,
+    .session-actions .btn {
+        width: 100%;
+    }
+
+    /* File attachment boxes */
+    .existing-file-box {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    /* Prevent horizontal overflow */
+    img,
+    video,
+    iframe {
+        max-width: 100%;
+    }
+}
+
+
+/* ===== SMALL PHONES ===== */
+
+@media (max-width: 480px) {
+
+    .container,
+    .portal-wrapper {
+        width: 92%;
+    }
+
+    .portal-card {
+        padding: 16px !important;
+    }
+
+    .navbar {
+        padding: 10px !important;
+    }
+
+    .brand-title {
+        font-size: 0.95rem;
+    }
+
+    .brand-tagline {
+        font-size: 0.7rem;
+    }
+
+    .btn-logout {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    textarea {
+        min-height: 120px;
+    }
+}
+        /* ==========================================================================
+           1. CORE DESIGN SYSTEM & LIGHT THEME TOKENS
+           ========================================================================== */
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --primary-light: #EEF2FF;
+            --accent-violet: #7C3AED;
+            --emerald-green: #059669;
+            --emerald-light: #ECFDF5;
+            --rose-red: #DC2626;
+            --rose-light: #FEF2F2;
+            --amber-gold: #D97706;
+
+            /* Light Dreamy Pastel Background */
+            --bg-gradient-start: #F4F7FF;
+            --bg-gradient-mid: #FAF5FF;
+            --bg-gradient-end: #F0F9FF;
+
+            /* Glassmorphism & Translucent Surfaces */
+            --surface-glass: rgba(255, 255, 255, 0.88);
+            --surface-glass-border: rgba(255, 255, 255, 0.95);
+            --surface-card: rgba(255, 255, 255, 0.92);
+            --surface-inner: rgba(248, 250, 252, 0.85);
+            --surface-inner-border: #E2E8F0;
+
+            /* Shadows & Elevation */
+            --card-shadow: 0 16px 40px -12px rgba(99, 102, 241, 0.1), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            --card-hover-shadow: 0 20px 45px -10px rgba(79, 70, 229, 0.16), 0 6px 18px -4px rgba(0, 0, 0, 0.04);
+            --button-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.28);
+
+            /* Typography Scale */
+            --text-main: #0F172A;
+            --text-heading: #1E1B4B;
+            --text-muted: #64748B;
+            --text-inverse: #FFFFFF;
+
+            /* Structural Geometry */
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+
+            --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET & AMBIENT CANVAS
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-main);
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        /* Ambient Glow Orbs */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(110px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.65;
+        }
+        .glow-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(196, 181, 253, 0.4) 0%, rgba(224, 231, 255, 0.1) 100%);
+            top: -150px;
+            left: -150px;
+        }
+        .glow-2 {
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(186, 230, 253, 0.45) 0%, rgba(216, 180, 254, 0.1) 100%);
+            bottom: -200px;
+            right: -150px;
+        }
+
+        .portal-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ==========================================================================
+           3. LIGHT GLASS NAVBAR
+           ========================================================================== */
+        .navbar-wrapper {
+            position: sticky;
+            top: 16px;
+            z-index: 100;
+            margin-bottom: 28px;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--surface-glass-border);
+            border-radius: var(--radius-lg);
+            padding: 12px 24px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-brand-logo {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-violet) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-inverse);
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        .nav-brand-text h2 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            line-height: 1.1;
+            margin: 0;
+        }
+
+        .nav-brand-text span {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--rose-red);
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-logout:hover {
+            background: var(--rose-red);
+            color: #FFFFFF;
+            border-color: var(--rose-red);
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* ==========================================================================
+           4. WORKSPACE HEADER & TOP CONTROLS
+           ========================================================================== */
+        .workspace-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .back-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .back-pill:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+            transform: translateX(-2px);
+        }
+
+        .hero-title-group h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            letter-spacing: -0.03em;
+            margin-bottom: 4px;
+        }
+
+        .hero-title-group p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .btn-add-session {
+            background: linear-gradient(135deg, var(--emerald-green) 0%, #047857 100%);
+            color: #ffffff;
+            border: none;
+            font-size: 0.875rem;
+            font-weight: 700;
+            padding: 11px 22px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 6px 18px rgba(5, 150, 105, 0.25);
+            transition: var(--transition);
+        }
+
+        .btn-add-session:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(5, 150, 105, 0.35);
+            color: #ffffff;
+        }
+
+        /* ==========================================================================
+           5. MASTER-DETAIL WORKSPACE GRID (14% / 86% RATIO)
+           ========================================================================== */
+        .session-workspace {
+            display: grid;
+            grid-template-columns: minmax(150px, 14%) 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* --- LEFT SIDEBAR (STICKY MASTER NAV ~14%) --- */
+        .session-sidebar {
+            position: sticky;
+            top: 92px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            background: var(--surface-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--surface-glass-border);
+            border-radius: var(--radius-md);
+            padding: 12px 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* Scrollbar refinement for sidebar */
+        .session-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .session-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(203, 213, 225, 0.6);
+            border-radius: 100px;
+        }
+
+        .sidebar-header {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 6px 10px 10px;
+            border-bottom: 1px solid var(--surface-inner-border);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-count-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+        }
+
+        .session-nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .session-nav-item {
+            width: 100%;
+            background: transparent;
+            border: 1.5px solid transparent;
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+            outline: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            position: relative;
+        }
+
+        .session-nav-item:hover {
+            background: var(--primary-light);
+            border-color: rgba(199, 210, 254, 0.6);
+        }
+
+        .session-nav-item.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+        }
+
+        .nav-item-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .nav-session-num {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--text-heading);
+        }
+
+        .session-nav-item.active .nav-session-num {
+            color: var(--primary);
+        }
+
+        .nav-session-date {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .nav-latest-dot {
+            width: 7px;
+            height: 7px;
+            background-color: var(--rose-red);
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(220, 38, 38, 0.6);
+        }
+
+        /* --- RIGHT CONTENT AREA (DETAIL WORKSPACE ~86%) --- */
+        .session-content-area {
+            width: 100%;
+            min-width: 0; /* Prevents CSS Grid overflow */
+        }
+
+        .session-panel {
+            display: none; /* Controlled client-side */
+            background: var(--surface-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--surface-glass-border);
+            border-radius: var(--radius-md);
+            padding: 32px 36px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+        }
+
+        .session-panel.active {
+            display: block;
+            animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--surface-inner-border);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .panel-title-group h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .panel-date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface-inner);
+            border: 1px solid var(--surface-inner-border);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .badge-latest {
+            background: var(--rose-light);
+            color: var(--rose-red);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+
+        /* ==========================================================================
+           6. FORM CONTROLS & ATTACHMENT CARDS
+           ========================================================================== */
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        textarea.form-control {
+            background-color: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.6;
+            padding: 16px;
+            outline: none;
+            transition: var(--transition);
+            resize: vertical;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+
+        textarea.form-control:focus {
+            background-color: #FFFFFF;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+            color: var(--text-main);
+        }
+
+        textarea.form-control[readonly] {
+            background-color: var(--surface-inner);
+            border-color: var(--surface-inner-border);
+            color: #334155;
+            cursor: default;
+        }
+
+        .form-label-custom {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 14px;
+            display: block;
+        }
+
+        input[type="file"].form-control {
+            background-color: #FFFFFF;
+            border: 1.5px dashed #CBD5E1;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 10px 14px;
+            transition: var(--transition);
+        }
+
+        input[type="file"].form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+
+        .hint-text {
+            font-size: 0.75rem;
+            color: var(--rose-red);
+            font-weight: 600;
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+
+        .existing-file-box {
+            background: #FFFFFF;
+            border: 1px solid var(--surface-inner-border);
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .existing-file-box a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .existing-file-box a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+
+        .selected-file-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-light);
+            border: 1px solid rgba(199, 210, 254, 0.8);
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 100px;
+        }
+
+        /* Action Buttons */
+        .btn-save-custom {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-violet) 100%);
+            color: #ffffff;
+            border: none;
+            font-size: 0.875rem;
+            font-weight: 700;
+            padding: 12px 26px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--button-shadow);
+            transition: var(--transition);
+        }
+
+        .btn-save-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -4px rgba(79, 70, 229, 0.42);
+            color: #ffffff;
+        }
+
+        .btn-delete-custom {
+            background: var(--rose-light);
+            color: var(--rose-red);
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            font-size: 0.875rem;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .btn-delete-custom:hover {
+            background: var(--rose-red);
+            color: #ffffff;
+            border-color: var(--rose-red);
+            box-shadow: 0 6px 18px rgba(220, 38, 38, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .alert-custom-warning {
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
+            color: var(--amber-gold);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        .custom-divider {
+            border-top: 1px solid #E2E8F0;
+            margin: 24px 0;
+            opacity: 0.8;
+        }
+
+        /* ==========================================================================
+           7. RESPONSIVE BREAKPOINTS (TABLET & MOBILE)
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .session-workspace {
+                grid-template-columns: 22% 1fr;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .session-workspace {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .session-sidebar {
+                position: relative;
+                top: 0;
+                max-height: none;
+                width: 100%;
+                padding: 10px;
+            }
+
+            .session-nav-list {
+                flex-direction: row;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 4px;
+            }
+
+            .session-nav-item {
+                width: auto;
+                min-width: 110px;
+                padding: 8px 12px;
+            }
+
+            .session-panel {
+                padding: 20px;
+            }
+
+            .portal-wrapper {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .hero-title-group h1 {
+                font-size: 1.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Soft Ambient Background Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <div class="portal-wrapper">
+
+        <!-- Light Glass Navbar -->
+        <div class="navbar-wrapper">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <div class="nav-brand-logo">G</div>
+                    <div class="nav-brand-text">
+                        <h2>GPREC Kurnool</h2>
+                        <span>Academic Workspace</span>
+                    </div>
+                </div>
+
+                <!-- Preserved Flask Logout Action Link -->
+                <a href="{{ url_for('logout') }}" class="btn-logout">
+                    <span>Logout</span> ➔
+                </a>
+            </nav>
+        </div>
+
+        <!-- Breadcrumb & Workspace Header -->
+        <div class="workspace-top-bar">
+            <a href="/allsubjects" class="back-pill">
+                ← All Courses
+            </a>
+
+            {% if can_edit %}
+            <form action="/addsession" method="post" class="m-0">
+                <input type="hidden" name="subject_id" value="{{ subject_id }}">
+                <button type="submit" class="btn btn-add-session d-flex align-items-center gap-2">
+                    <span>+</span> Add Session
+                </button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="hero-title-group mb-4">
+            <h1>{{ subject_name }} Sessions</h1>
+            <p>Select a session from the list to view or update topics and homework.</p>
+        </div>
+
+        <!-- Master-Detail Session Workspace -->
+        <div class="session-workspace">
+
+            <!-- LEFT SIDEBAR: MASTER SESSION LIST (~14% Desktop Width) -->
+            <aside class="session-sidebar">
+                <div class="sidebar-header">
+                    <span>Sessions</span>
+                    <span class="sidebar-count-badge">{{ rows|length }}</span>
+                </div>
+
+                <div class="session-nav-list" role="tablist">
+                    {% for row in rows %}
+                    <button
+                        type="button"
+                        class="session-nav-item {% if row[0] == latest_session or (loop.first and not latest_session) %}active{% endif %}"
+                        data-session-target="session-panel-{{ row[0] }}"
+                        onclick="switchSession(this, 'session-panel-{{ row[0] }}')">
+
+                        <div class="nav-item-top">
+                            <span class="nav-session-num">Session {{ row[1] }}</span>
+                            {% if row[0] == latest_session %}
+                                <span class="nav-latest-dot" title="Latest Session"></span>
+                            {% endif %}
+                        </div>
+
+                        <span class="nav-session-date">{{ row[2] }}</span>
+                    </button>
+                    {% endfor %}
+                </div>
+            </aside>
+
+            <!-- RIGHT CONTENT AREA: ACTIVE SESSION DETAIL WORKSPACE (~86% Desktop Width) -->
+            <main class="session-content-area">
+
+                {% for row in rows %}
+                <div
+                    id="session-panel-{{ row[0] }}"
+                    class="session-panel {% if row[0] == latest_session or (loop.first and not latest_session) %}active{% endif %}">
+
+                    <!-- Panel Header -->
+                    <div class="panel-header">
+                        <div class="panel-title-group">
+                            <h2>Session {{ row[1] }}</h2>
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <span class="panel-date-badge">📅 Held on {{ row[2] }}</span>
+                                {% if row[0] == latest_session %}
+                                    <span class="badge-latest">Latest Update</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Topic Covered Section -->
+                    <div class="mb-3">
+                        <p class="section-label">📖 Topic Covered</p>
+
+                        <!-- Preserved topic text field ID -->
+                        <textarea
+                            class="form-control"
+                            rows="8"
+                            id="topic{{ row[0] }}"
+                            {% if not can_edit %}readonly{% endif %}>{{ row[3] }}</textarea>
+
+                        {% if can_edit %}
+                        <label class="form-label-custom">📎 Topic Attachment</label>
+                        {% if not row[5] %}
+                        <!-- Preserved file input ID and onchange handler -->
+                        <input
+                            type="file"
+                            class="form-control mt-1"
+                            id="topicFile{{ row[0] }}"
+                            accept=".pdf,.png,.jpg,.jpeg"
+                            onchange="showSelectedFile('topic', {{ row[0] }})">
+                        {% endif %}
+                        <p class="hint-text">Only one file allowed to attach.</p>
+                        <!-- Preserved dynamic file selection container -->
+                        <div id="topicSelected{{ row[0] }}" class="mt-2"></div>
+                        {% endif %}
+
+                        {% if row[5] %}
+                        <!-- Preserved existing file container ID -->
+                        <div id="topicExisting{{ row[0] }}" class="existing-file-box mt-2">
+                            <div>
+                                📄 Existing File:
+                                <a href="/download/{{ row[6] }}" target="_blank">
+                                    {{ row[5] }}
+                                </a>
+                            </div>
+                            {% if can_edit %}
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-danger ms-2"
+                                onclick="deleteAttachment({{ row[0] }},'topic')">
+                                Delete File
+                            </button>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="custom-divider"></div>
+
+                    <!-- Homework Section -->
+                    <div class="mb-4">
+                        <p class="section-label">✏️ Homework</p>
+
+                        <!-- Preserved homework text field ID -->
+                        <textarea
+                            class="form-control"
+                            rows="6"
+                            id="homework{{ row[0] }}"
+                            {% if not can_edit %}readonly{% endif %}>{{ row[4] }}</textarea>
+
+                        {% if can_edit %}
+                        <label class="form-label-custom">📎 Homework Attachment</label>
+
+                        {% if not row[7] %}
+                        <!-- Preserved file input ID and onchange handler -->
+                        <input
+                            type="file"
+                            class="form-control mt-1"
+                            id="homeworkFile{{ row[0] }}"
+                            accept=".pdf,.png,.jpg,.jpeg"
+                            onchange="showSelectedFile('homework', {{ row[0] }})">
+                        {% endif %}
+                        <p class="hint-text">Only one file allowed to attach.</p>
+                        <!-- Preserved dynamic file selection container -->
+                        <div id="homeworkSelected{{ row[0] }}" class="mt-2"></div>
+                        {% endif %}
+
+                        {% if row[7] %}
+                        <!-- Preserved existing file container ID -->
+                        <div id="homeworkExisting{{ row[0] }}" class="existing-file-box mt-2">
+                            <div>
+                                📄 Existing File:
+                                <a href="/download/{{ row[8] }}" target="_blank">
+                                    {{ row[7] }}
+                                </a>
+                            </div>
+                            {% if can_edit %}
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-danger ms-2"
+                                onclick="deleteAttachment({{ row[0] }},'homework')">
+                                Delete File
+                            </button>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Action Controls for Authorized User -->
+                    {% if can_edit %}
+                    <div class="pt-2 d-flex flex-wrap gap-2">
+                        <button
+                            type="button"
+                            class="btn btn-save-custom"
+                            onclick="updateSession({{ row[0] }})">
+                            Save Changes
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-delete-custom"
+                            onclick="deleteSession({{ row[0] }})">
+                            Delete Session
+                        </button>
+                    </div>
+                    {% endif %}
+
+                </div>
+                {% endfor %}
+
+                <!-- Empty State Container -->
+                {% if rows|length==0 %}
+                <div class="alert-custom-warning">
+                    ⚠️ No Sessions Found for {{ subject_name }}.
+                </div>
+                {% endif %}
+
+            </main>
+        </div><!-- /session-workspace -->
+
+    </div>
+
+    <!-- Application Scripting (Logic 100% Unchanged + Client-Side Session Switcher) -->
+    <script>
+    // Client-side Session Selection Switching Logic
+    function switchSession(navButton, panelId) {
+        // Deactivate all sidebar items
+        document.querySelectorAll(".session-nav-item").forEach(item => {
+            item.classList.remove("active");
+        });
+
+        // Hide all workspace panels
+        document.querySelectorAll(".session-panel").forEach(panel => {
+            panel.classList.remove("active");
+        });
+
+        // Activate clicked sidebar item & target workspace panel
+        navButton.classList.add("active");
+        const activePanel = document.getElementById(panelId);
+        if (activePanel) {
+            activePanel.classList.add("active");
+        }
+    }
+
+    // Attachment file selection UI helper
+    function showSelectedFile(type, id) {
+        let input = document.getElementById(type + "File" + id);
+        let target = document.getElementById(type + "Selected" + id);
+        if (input && input.files && input.files[0]) {
+            target.innerHTML = `<div class="selected-file-chip">📎 ${input.files[0].name}</div>`;
+        } else if (target) {
+            target.innerHTML = "";
+        }
+    }
+
+    // Backend Session Operations (Preserved 100%)
+    function updateSession(id) {
+        let topic = document.getElementById("topic"+id).value;
+        let homework = document.getElementById("homework"+id).value;
+
+        let formData = new FormData();
+
+        formData.append("id", id);
+        formData.append("topic", topic);
+        formData.append("homework", homework);
+
+        // Topic File (if input exists)
+        let topicInput = document.getElementById("topicFile"+id);
+        if(topicInput && topicInput.files.length > 0){
+            formData.append("topicFile", topicInput.files[0]);
+        }
+
+        // Homework File (if input exists)
+        let homeworkInput = document.getElementById("homeworkFile"+id);
+        if(homeworkInput && homeworkInput.files.length > 0){
+            formData.append("homeworkFile", homeworkInput.files[0]);
+        }
+
+        fetch("/update_session", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            location.reload();
+        })
+        .catch(err => {
+            console.log(err);
+            alert("Update Failed");
+        });
+    }
+
+    function deleteSession(id) {
+        if(!confirm("Delete this session?"))
+            return;
+
+        fetch("/delete_session", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: id
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            location.reload();
+        });
+    }
+
+    function deleteAttachment(sessionid, type) {
+        if(!confirm("Delete this attachment?"))
+            return;
+
+        fetch("/delete_attachment", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                sessionid: sessionid,
+                type: type
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            location.reload();
+        })
+        .catch(() => alert("Unable to delete attachment"));
+    }
+    </script>
+
+</body>
+</html>

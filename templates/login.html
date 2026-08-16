@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPREC Kurnool - Academic Portal</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== MOBILE RESPONSIVE ONLY ===== */
+
+@media (max-width: 768px) {
+
+    /* Page spacing */
+    .container,
+    .portal-wrapper {
+        width: 94%;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    /* Navbar */
+    .navbar {
+        padding: 12px !important;
+    }
+
+    .navbar .container-fluid {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .brand-title {
+        font-size: 1rem;
+    }
+
+    .brand-tagline {
+        font-size: 0.75rem;
+    }
+
+    /* Cards */
+    .portal-card,
+    .session-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Grids become single column */
+    .row > [class*="col-"] {
+        width: 100%;
+    }
+
+    /* Headings */
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    /* Inputs and textareas */
+    input,
+    select,
+    textarea,
+    .form-control {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        min-height: 130px;
+    }
+
+    /* Buttons */
+    .btn {
+        min-height: 44px;
+    }
+
+    /* Button groups */
+    .action-buttons,
+    .session-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .action-buttons .btn,
+    .session-actions .btn {
+        width: 100%;
+    }
+
+    /* File attachment boxes */
+    .existing-file-box {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    /* Prevent horizontal overflow */
+    img,
+    video,
+    iframe {
+        max-width: 100%;
+    }
+}
+
+
+/* ===== SMALL PHONES ===== */
+
+@media (max-width: 480px) {
+
+    .container,
+    .portal-wrapper {
+        width: 92%;
+    }
+
+    .portal-card {
+        padding: 16px !important;
+    }
+
+    .navbar {
+        padding: 10px !important;
+    }
+
+    .brand-title {
+        font-size: 0.95rem;
+    }
+
+    .brand-tagline {
+        font-size: 0.7rem;
+    }
+
+    .btn-logout {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    textarea {
+        min-height: 120px;
+    }
+}
+        :root {
+            /* Brand & Accent Colors */
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --primary-light: #EEF2FF;
+            --accent-violet: #7C3AED;
+            --accent-sky: #0284C7;
+            --emerald-green: #059669;
+
+            /* Light Dreamy Palette */
+            --bg-gradient-start: #F4F7FF;
+            --bg-gradient-mid: #FAF5FF;
+            --bg-gradient-end: #F0F9FF;
+
+            /* Glassmorphism Surface Settings */
+            --surface-glass: rgba(255, 255, 255, 0.84);
+            --surface-glass-border: rgba(255, 255, 255, 0.95);
+            --surface-inner: rgba(248, 250, 252, 0.8);
+            --surface-inner-border: #E2E8F0;
+
+            /* Elevation & Shadows */
+            --card-shadow: 0 25px 60px -15px rgba(99, 102, 241, 0.14), 0 10px 25px -5px rgba(0, 0, 0, 0.03);
+            --button-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.32);
+
+            /* Typography Colors */
+            --text-main: #0F172A;
+            --text-heading: #1E1B4B;
+            --text-muted: #64748B;
+            --text-inverse: #FFFFFF;
+
+            /* Error & Notice Badges */
+            --error-bg: #FEF2F2;
+            --error-border: #FCA5A5;
+            --error-text: #991B1B;
+
+            /* Structural Geometry */
+            --radius-lg: 28px;
+            --radius-md: 16px;
+            --radius-sm: 10px;
+
+            --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Dreamy Background Glow Blobs */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.75;
+        }
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(196, 181, 253, 0.45) 0%, rgba(224, 231, 255, 0.2) 100%);
+            top: -120px;
+            left: -100px;
+        }
+        .glow-2 {
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(186, 230, 253, 0.5) 0%, rgba(216, 180, 254, 0.2) 100%);
+            bottom: -150px;
+            right: -120px;
+        }
+        .glow-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(254, 215, 226, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+            top: 40%;
+            left: 60%;
+        }
+
+        .portal-wrapper {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header Area */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .top-badges {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 6px 16px;
+            border-radius: 100px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            margin-bottom: 18px;
+        }
+
+        .college-tag {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .live-status {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--emerald-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(5, 150, 105, 0.6);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.6); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(5, 150, 105, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+        }
+
+        .brand-header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            letter-spacing: -0.03em;
+            margin-bottom: 6px;
+        }
+
+        .brand-header p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Light Glass Card Container */
+        .portal-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--surface-glass-border);
+            border-radius: var(--radius-lg);
+            padding: 34px 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* Micro HUD Preview Grid */
+        .activity-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: var(--surface-inner);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--surface-inner-border);
+            margin-bottom: 24px;
+        }
+
+        .preview-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 6px 4px;
+        }
+
+        .preview-item .icon {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .preview-item .label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .preview-item .val {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 2px;
+        }
+
+        /* Selectors */
+        .selector-group {
+            margin-bottom: 20px;
+        }
+
+        .selector-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+        }
+
+        .pill-container {
+            display: grid;
+            gap: 8px;
+        }
+
+        .year-pills {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .section-pills {
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .select-btn {
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            color: #475569;
+            padding: 10px 4px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            outline: none;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .select-btn:hover {
+            border-color: #C7D2FE;
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .select-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            border-color: transparent;
+            color: var(--text-inverse);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
+            transform: translateY(-1px);
+        }
+
+        /* Input Block & Form Fields */
+        .input-block {
+            margin-top: 20px;
+        }
+
+        .input-block label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        /* Target Jinja Email Field */
+        .input-block input[type="text"],
+        .input-block input[type="email"] {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid #CBD5E1;
+            background: #FFFFFF;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 600;
+            outline: none;
+            transition: var(--transition);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+
+        .input-block input[type="text"]:focus,
+        .input-block input[type="email"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+
+        /* Target Jinja Submit Button */
+        .input-block input[type="submit"],
+        .submit-btn {
+            width: 100%;
+            padding: 15px 16px;
+            margin-top: 22px;
+            border-radius: var(--radius-md);
+            border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-violet) 100%);
+            color: var(--text-inverse);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--button-shadow);
+        }
+
+        .input-block input[type="submit"]:hover,
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -4px rgba(79, 70, 229, 0.42);
+        }
+
+        .input-block input[type="submit"]:active,
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Error Badges */
+        .error-badge {
+            margin-top: 10px;
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            color: var(--error-text);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-badge::before {
+            content: "⚠️";
+            font-size: 0.9rem;
+        }
+
+        /* Footer Link */
+        .footer-help {
+            text-align: center;
+            margin-top: 26px;
+        }
+
+        .footer-help a {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-help a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 480px) {
+            .portal-card {
+                padding: 26px 20px;
+            }
+            .brand-header h1 {
+                font-size: 1.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Soft Dreamy Background Ambient Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <div class="portal-wrapper">
+
+        <!-- Header Area -->
+        <div class="brand-header">
+            <div class="top-badges">
+                <span class="college-tag">GPREC Kurnool</span>
+                <span class="live-status"><span class="pulse-dot"></span> Daily Log Active</span>
+            </div>
+            <h1>Academic Portal</h1>
+            <p>Instant Access to Homework &amp; Topics</p>
+        </div>
+
+        <!-- Light Glass Card Container -->
+        <div class="portal-card">
+
+            <!-- Micro-HUD Preview Grid -->
+            <div class="activity-preview-grid">
+                <div class="preview-item">
+                    <span class="icon">📖</span>
+                    <span class="label">Topics</span>
+                    <span class="val">Updated</span>
+                </div>
+                <div class="preview-item">
+                    <span class="icon">📝</span>
+                    <span class="label">Homework</span>
+                    <span class="val">Queued</span>
+                </div>
+                <div class="preview-item">
+                    <span class="icon">⚡</span>
+                    <span class="label">Status</span>
+                    <span class="val" style="color: var(--emerald-green);">Ready</span>
+                </div>
+            </div>
+
+            <!-- Academic Year Quick Selector -->
+            <div class="selector-group">
+                <span class="selector-label">Select Academic Year</span>
+                <div class="pill-container year-pills">
+                    <button type="button" class="select-btn year-btn active" onclick="selectYear(this,'1')">1st Yr</button>
+                    <button type="button" class="select-btn year-btn" onclick="selectYear(this,'2')">2nd Yr</button>
+                    <button type="button" class="select-btn year-btn" onclick="selectYear(this,'3')">3rd Yr</button>
+                    <button type="button" class="select-btn year-btn" onclick="selectYear(this,'4')">4th Yr</button>
+                </div>
+            </div>
+
+            <!-- Section Quick Selector (A through E) -->
+            <div class="selector-group">
+                <span class="selector-label">Select Section</span>
+                <div class="pill-container section-pills">
+                    <button type="button" class="select-btn section-btn active" onclick="selectSection(this,'A')">Sec A</button>
+                    <button type="button" class="select-btn section-btn" onclick="selectSection(this,'B')">Sec B</button>
+                    <button type="button" class="select-btn section-btn" onclick="selectSection(this,'C')">Sec C</button>
+                    <button type="button" class="select-btn section-btn" onclick="selectSection(this,'D')">Sec D</button>
+                    <button type="button" class="select-btn section-btn" onclick="selectSection(this,'E')">Sec E</button>
+                </div>
+            </div>
+
+            <!-- Form Body (Jinja Variables Strictly Preserved) -->
+            <form action="/" method="POST">
+                {{ form.hidden_tag() }}
+
+                <!-- Hidden Input Fields bound to JavaScript selector functions -->
+                <input type="hidden" id="year" name="year" value="1">
+                <input type="hidden" id="section" name="section" value="A">
+
+                <div class="input-block">
+                    {{ form.email.label }}
+                    {{ form.email(value="249XA05@gprec.ac.in", inputmode="email", autocomplete="email", autocapitalize="off") }}
+
+                    {% for error in form.email.errors %}
+                        <div class="error-badge">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="input-block">
+                    {{ form.submit(value="Sign In to Portal") }}
+                    {% if istried==1 %}
+                        <div class="error-badge">Incorrect Details</div>
+                    {% endif %}
+                </div>
+            </form>
+
+            <div class="footer-help">
+                <a href="#">Need help? Contact GPREC Student Cell</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Handlers (Fully Compatible with Backend Scripting) -->
+    <script>
+        function selectYear(button, value) {
+            document.querySelectorAll(".year-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+            button.classList.add("active");
+            document.getElementById("year").value = value;
+        }
+
+        function selectSection(button, value) {
+            document.querySelectorAll(".section-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+            button.classList.add("active");
+            document.getElementById("section").value = value;
+        }
+
+        // Initialize Default Values safely
+        document.addEventListener("DOMContentLoaded", function() {
+            if (document.getElementById("year")) document.getElementById("year").value = "1";
+            if (document.getElementById("section")) document.getElementById("section").value = "A";
+        });
+    </script>
+</body>
+</html>
