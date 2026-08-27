@@ -115,7 +115,7 @@
             }
         }
 
-        /* ==========================================================================
+/* ==========================================================================
             1. CORE DESIGN SYSTEM & LIGHT THEME TOKENS
             ========================================================================== */
         :root {
@@ -224,6 +224,9 @@
             border-radius: var(--radius-lg);
             padding: 12px 24px;
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .nav-brand {
@@ -354,11 +357,11 @@
         }
 
         /* ==========================================================================
-            5. MASTER-DETAIL WORKSPACE GRID (14% / 86% RATIO)
+            5. MASTER-DETAIL WORKSPACE GRID (FIXED LAYOUT OVERFLOW)
             ========================================================================== */
         .session-workspace {
             display: grid;
-            grid-template-columns: minmax(150px, 14%) 1fr;
+            grid-template-columns: 280px 1fr;
             gap: 24px;
             align-items: start;
         }
@@ -709,7 +712,7 @@
             ========================================================================== */
         @media (max-width: 992px) {
             .session-workspace {
-                grid-template-columns: 22% 1fr;
+                grid-template-columns: 240px 1fr;
                 gap: 16px;
             }
         }
@@ -735,7 +738,7 @@
             }
             .session-nav-item {
                 width: auto;
-                min-width: 110px;
+                min-width: 130px;
                 padding: 8px 12px;
             }
             .session-panel {
